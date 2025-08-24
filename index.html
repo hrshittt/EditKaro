@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Editkaro.in — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* --- Base Variables (Default Dark Theme) --- */
+    :root{
+      /* Default Dark Theme */
+      --bg:#0b0d10;             /* page background */
+      --card:#12161b;           /* card background */
+      --muted:#9aa4b2;          /* secondary text */
+      --text:#e8eef6;           /* primary text */
+      --brand:#73f3c4;          /* brand accent (greenish) */
+      --brand-2:#7aa2ff;        /* secondary accent (bluish) */
+      --ring:#2a2f36;           /* borders */
+      --overlay-bg: rgba(11,13,16,.72); /* Overlay for fixed elements */
+      --main-bg-gradient: radial-gradient(1200px 600px at 80% -10%, rgba(115,243,196,.12), transparent 60%),radial-gradient(1200px 800px at -10% 10%, rgba(122,162,255,.12), transparent 60%), var(--bg);
+    }
+
+    /* --- Cool Gradient Theme --- */
+    body.cool-gradient-theme {
+      --bg:#1a1a2e;
+      --card:#2a0b3b;
+      --muted:#b0c4de;
+      --text:#e0e7f7;
+      --brand:#8a2be2; /* Violet */
+      --brand-2:#00bfff; /* Deep Sky Blue */
+      --ring:#4a235a;
+      --overlay-bg: rgba(26,26,46,.72);
+      --main-bg-gradient: radial-gradient(1200px 600px at 80% -10%, rgba(138,43,226,.15), transparent 60%),radial-gradient(1200px 800px at -10% 10%, rgba(0,191,255,.15), transparent 60%), var(--bg);
+    }
+
+    /* --- Warm Gradient Theme --- */
+    body.warm-gradient-theme {
+      --bg:#2e1a1a;
+      --card:#3b0b0b;
+      --muted:#e0b0b0;
+      --text:#f7e7e0;
+      --brand:#ff8c00; /* Dark Orange */
+      --brand-2:#ff4500; /* Orange Red */
+      --ring:#5a2323;
+      --overlay-bg: rgba(46,26,26,.72);
+      --main-bg-gradient: radial-gradient(1200px 600px at 80% -10%, rgba(255,140,0,.15), transparent 60%),radial-gradient(1200px 800px at -10% 10%, rgba(255,69,0,.15), transparent 60%), var(--bg);
+    }
+    
+    /* --- General & Base Styles --- */
+    *{box-sizing:border-box; margin:0; padding:0;}
+    html,body{height:100%; scroll-behavior: smooth;} /* Smooth scrolling */
+    body{
+      font-family:"Inter", system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; 
+      color:var(--text); 
+      background:var(--main-bg-gradient); /* Use main gradient */
+      position: relative; /* Needed for pseudo-elements */
+      overflow-x: hidden; /* Prevent horizontal scroll from animations */
+      transition: background 0.5s ease; /* Smooth theme transition */
+    }
+    a{color:inherit; text-decoration:none}
+    .container{max-width:1200px; margin:0 auto; padding:0 20px}
+
+    /* --- Dynamic Background Animation (Subtle Gradient Shift) --- */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, var(--brand-2) 0%, var(--brand) 100%);
+        background-size: 200% 200%;
+        animation: gradientShift 15s ease infinite;
+        opacity: 0.08; /* Very subtle */
+        z-index: -2; /* Behind everything */
+        filter: blur(80px); /* Make it blurry */
+        transition: background 0.5s ease, opacity 0.5s ease; /* Smooth theme transition */
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* --- Header --- */
+    header{
+      position:sticky; top:0; z-index:30; 
+      backdrop-filter:saturate(180%) blur(8px); 
+      background:var(--overlay-bg); /* Use theme overlay */
+      border-bottom:1px solid var(--ring);
+      transition: background 0.3s ease, border-bottom 0.3s ease; /* Smooth theme transition */
+    }
+    .nav{display:flex; align-items:center; justify-content:space-between; height:70px; /* Slightly taller header */}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:.3px; font-size:1.2em;} /* Larger brand text */
+    .brand .dot{width:12px; height:12px; border-radius:50%; background:linear-gradient(135deg, var(--brand), var(--brand-2)); box-shadow:0 0 8px var(--brand-2);} /* Larger dot with glow */
+    nav ul{display:flex; gap:22px; list-style:none; padding:0; margin:0} /* More spacing for nav links */
+    nav a{padding:10px 15px; border-radius:10px; color:var(--muted); font-size:1.05em; transition:color .2s, background .2s;} /* Larger nav text */
+    nav a:hover{color:var(--text); background:rgba(255,255,255,.08); box-shadow:0 0 5px rgba(122,162,255,.3);} /* Subtle hover glow */
+    .cta{
+      padding:10px 16px; 
+      border:1px solid var(--ring); 
+      border-radius:12px;
+      background:linear-gradient(135deg, var(--brand-2), var(--brand)); /* Gradient CTA */
+      color:var(--bg); /* Dark text on bright CTA */
+      font-weight:700;
+      transition:transform .2s, box-shadow .2s;
+    }
+    .cta:hover{
+      transform:translateY(-2px); 
+      box-shadow:0 4px 15px rgba(122,162,255,.4); /* Lift and stronger shadow */
+    }
+    .theme-switcher-wrap {
+        margin-left: 20px;
+        position: relative;
+        display: inline-block;
+    }
+    .theme-switcher-wrap select {
+        background: var(--card);
+        border: 1px solid var(--ring);
+        color: var(--text);
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 0.9em;
+        appearance: none; /* Remove default dropdown arrow */
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .theme-switcher-wrap select:hover {
+        border-color: var(--brand-2);
+        box-shadow: 0 0 5px rgba(122,162,255,.3);
+    }
+    .theme-switcher-wrap::after {
+        content: '▼'; /* Custom dropdown arrow */
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        pointer-events: none;
+    }
+
+
+    /* --- Hero --- */
+    .hero{display:grid; grid-template-columns:1.2fr .8fr; gap:40px; align-items:center; padding:80px 0 60px;} /* More spacing */
+    .hero h1{font-size:clamp(32px, 5vw, 64px); line-height:1.1; margin:0 0 20px; letter-spacing:-.03em; text-shadow:0 0 10px rgba(232,239,246,.2);} /* Larger, bolder, more spaced title */
+    .hero p{color:var(--muted); font-size:clamp(16px, 2.5vw, 20px); line-height:1.6; max-width: 600px;} /* Larger, more readable paragraph */
+    .badges{display:flex; gap:12px; flex-wrap:wrap; margin:24px 0} /* More spacing */
+    .badge{
+      border:1px solid var(--ring); 
+      padding:10px 16px; 
+      border-radius:999px; 
+      font-size:13px; 
+      color:var(--muted);
+      background:rgba(255,255,255,.03); /* Subtle background for badges */
+      transition:transform .1s ease, background .1s ease;
+    }
+    .badge:hover{
+        transform: translateY(-1px);
+        background:rgba(255,255,255,.06);
+    }
+    .hero-card{
+      background:linear-gradient(180deg, rgba(122,162,255,.2), rgba(115,243,196,.1)), var(--card); /* Stronger gradient */
+      border:1px solid var(--ring); 
+      border-radius:24px; /* More rounded */
+      overflow:hidden; 
+      position:relative;
+      box-shadow:0 8px 30px rgba(0,0,0,.4); /* Deeper shadow */
+      transition:transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .hero-card:hover {
+        transform: translateY(-5px) rotateX(2deg) rotateY(-2deg); /* Subtle 3D tilt on hover */
+        box-shadow:0 12px 40px rgba(0,0,0,.6);
+    }
+    .hero-video{aspect-ratio:16/9; width:100%; display:block; object-fit:cover; filter:saturate(1.1); /* Slightly more vibrant */}
+
+    /* --- Filters --- */
+    .controls{display:flex; gap:15px; flex-wrap:wrap; align-items:center; margin:30px 0} /* More spacing */
+    .search{flex:1 1 280px; display:flex; align-items:center; gap:10px; background:var(--card); border:1px solid var(--ring); padding:12px 15px; border-radius:15px;} /* Larger search bar */
+    .search input{flex:1; border:none; outline:none; background:transparent; color:var(--text); font-size:1em;}
+    .filters{display:flex; gap:10px; flex-wrap:wrap;}
+    .filter-btn{
+      border:1px solid var(--ring); 
+      background:var(--card); 
+      color:var(--muted); 
+      padding:10px 16px; 
+      border-radius:999px; 
+      cursor:pointer; 
+      transition:all .2s ease;
+      font-size:0.95em;
+    }
+    .filter-btn:hover{
+      transform:translateY(-2px); 
+      color:var(--text); 
+      background:rgba(255,255,255,.06);
+      box-shadow:0 2px 10px rgba(115,243,196,.2);
+    }
+    .filter-btn.active{
+      background:linear-gradient(135deg, rgba(122,162,255,.3), rgba(115,243,196,.3)); 
+      color:var(--text); 
+      border-color:transparent;
+      box-shadow:0 0 15px rgba(122,162,255,.4);
+    }
+
+    /* --- Grid --- */
+    .grid{display:grid; grid-template-columns:repeat(12,1fr); gap:20px; /* More spacing */}
+    .card{
+      grid-column:span 4; 
+      background:var(--card); 
+      border:1px solid var(--ring); 
+      border-radius:20px; /* More rounded */
+      overflow:hidden; 
+      position:relative;
+      transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .card:hover{
+        transform: translateY(-5px) scale(1.02); /* Lift and slightly enlarge */
+        box-shadow: 0 10px 30px rgba(0,0,0,.5); /* Stronger shadow */
+        border-color: var(--brand-2); /* Highlight border */
+    }
+    @media (max-width: 980px){ .card{grid-column:span 6} .hero{grid-template-columns:1fr} }
+    @media (max-width: 640px){ .card{grid-column:span 12} }
+
+    .thumb-wrap{position:relative; overflow:hidden;} /* Ensure blur doesn't overflow */
+    .thumb{width:100%; aspect-ratio:16/9; object-fit:cover; display:block; filter:saturate(1.1); transition:filter .3s ease, transform .3s ease;}
+    .chip{position:absolute; top:15px; left:15px; padding:8px 12px; font-size:12px; border-radius:999px; color:#0b0d10; font-weight:700; background:linear-gradient(135deg, var(--brand), var(--brand-2)); box-shadow:0 2px 8px rgba(0,0,0,.3);} /* Larger chip with shadow */
+    
+    /* Blurry Overlay on Hover */
+    .overlay{
+      position:absolute; inset:0; 
+      display:grid; place-items:center; 
+      background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.6)); 
+      opacity:0; 
+      transition:opacity .3s ease, backdrop-filter .3s ease; /* Smooth transition */
+      backdrop-filter: blur(0px); /* Initial blur */
+    }
+    .card:hover .overlay{
+        opacity:1;
+        backdrop-filter: blur(8px); /* Blur on hover */
+    }
+    .play{
+      display:flex; align-items:center; gap:10px; 
+      padding:12px 18px; /* Larger play button */
+      border-radius:15px; /* More rounded */
+      background:rgba(0,0,0,.7); 
+      border:1px solid rgba(255,255,255,.3);
+      font-size:1.1em;
+      color:var(--brand); /* Play button text color */
+      opacity:0; /* Hidden initially */
+      transform:translateY(10px); /* Slide up effect */
+      transition:opacity .3s ease, transform .3s ease;
+    }
+    .card:hover .play{
+        opacity:1;
+        transform:translateY(0);
+    }
+    .play svg{width:24px; height:24px; fill:currentColor;} /* Larger icon */
+
+    .meta{display:flex; align-items:flex-start; justify-content:space-between; gap:10px; padding:15px;} /* More padding */
+    .title{font-weight:700; font-size:1.1em;} /* Larger title */
+    .desc{color:var(--muted); font-size:0.9em; line-height:1.4;} /* Slightly larger desc */
+
+    /* --- Lightbox --- */
+    .lightbox{position:fixed; inset:0; display:none; align-items:center; justify-content:center; background:rgba(0,0,0,.85); z-index:60; padding:20px; backdrop-filter:blur(10px); /* Blur background */}
+    .lightbox.open{display:flex}
+    .lightbox-content{width:min(1200px, 96vw); background:var(--card); border:1px solid var(--ring); border-radius:20px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,.6);} /* Larger, more rounded, deeper shadow */
+    .lightbox video{width:100%; height:auto; display:block}
+    .lightbox-top{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:15px 20px; border-bottom:1px solid var(--ring);} /* More padding */
+    .close{cursor:pointer; border:1px solid var(--ring); padding:8px 14px; border-radius:10px; color:var(--muted); font-size:1em; transition:color .2s, background .2s;} /* Larger close button */
+    .close:hover{color:var(--text); background:rgba(255,255,255,.08);}
+
+    /* --- Sections --- */
+    section{padding:60px 0;} /* More vertical spacing between sections */
+    h2.section-title{font-size:clamp(28px, 4vw, 42px); margin:0 0 10px; text-align:center; text-shadow:0 0 8px rgba(232,239,246,.2);} /* Larger, centered section titles */
+    .section-sub{color:var(--muted); margin:0 auto 30px; text-align:center; max-width:700px; font-size:1.1em;} /* Larger, centered sub-text */
+
+    /* --- Footer --- */
+    footer{
+      border-top:1px solid var(--ring); 
+      padding:30px 0; /* More padding */
+      color:var(--muted); 
+      font-size:0.9em;
+      background:var(--bg); /* Ensure footer background matches page */
+    }
+    .socials{display:flex; gap:15px; flex-wrap:wrap;} /* More spacing */
+    .pill{
+      border:1px solid var(--ring); 
+      padding:8px 14px; 
+      border-radius:999px;
+      background:rgba(255,255,255,.03);
+      transition:transform .1s ease, background .1s ease;
+    }
+    .pill:hover{
+        transform: translateY(-1px);
+        background:rgba(255,255,255,.06);
+    }
+
+    /* --- Micro animations --- */
+    @keyframes floaty { from{transform:translateY(0)} 50%{transform:translateY(-8px)} to{transform:translateY(0)} } /* Stronger float */
+    .floaty{animation:floaty 6s ease-in-out infinite} /* Slower, more pronounced float */
+
+    /* Scroll Reveal Animation Classes */
+    .scroll-reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .scroll-reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Media Queries for Responsiveness */
+    @media (max-width: 768px) {
+        .hero { grid-template-columns: 1fr; text-align: center; padding: 40px 0; }
+        .hero h1 { font-size: 2.5em; margin-bottom: 15px; }
+        .hero p { font-size: 1.1em; max-width: none; margin-bottom: 20px; }
+        .badges { justify-content: center; margin-bottom: 20px; }
+        .hero-card { margin-top: 30px; }
+        .controls { flex-direction: column; align-items: stretch; }
+        .search { width: 100%; }
+        .filters { justify-content: center; width: 100%; }
+        .card { grid-column: span 12; }
+        .nav { height: 60px; padding: 10px 15px; }
+        .brand { font-size: 1em; }
+        nav ul { gap: 10px; }
+        nav a { padding: 8px 10px; font-size: 0.9em; }
+        .cta { padding: 8px 12px; font-size: 0.9em; }
+        h2.section-title { font-size: 2em; }
+        .section-sub { font-size: 1em; margin-bottom: 20px; }
+        .footer-grid { grid-template-columns: 1fr; text-align: center; }
+        .footer-column { margin-bottom: 20px; }
+        .fixed-header, .fixed-footer { padding: 10px 15px; }
+    }
+    /* --- Game UI Glow --- */
+.card {
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 2px;
+  background: linear-gradient(90deg, var(--brand), var(--brand-2), var(--brand));
+  background-size: 300% 300%;
+  animation: borderGlow 6s linear infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, 
+                linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0.5;
+}
+@keyframes borderGlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* --- Shine Effect on Hover --- */
+.card:hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shineMove 1s forwards;
+}
+@keyframes shineMove {
+  from { left: -100%; }
+  to { left: 100%; }
+}
+
+/* --- Hero Glitch Text --- */
+.hero h1 {
+  position: relative;
+  display: inline-block;
+}
+.hero h1::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  color: var(--brand-2);
+  background: transparent;
+  clip-path: inset(0 0 0 0);
+  animation: glitch 2s infinite;
+  opacity: 0.7;
+}
+@keyframes glitch {
+  0% { clip-path: inset(0 0 90% 0); }
+  20% { clip-path: inset(10% 0 80% 0); }
+  40% { clip-path: inset(40% 0 40% 0); }
+  60% { clip-path: inset(80% 0 10% 0); }
+  80% { clip-path: inset(50% 0 30% 0); }
+  100% { clip-path: inset(0 0 90% 0); }
+}
+
+/* --- Floating Hologram Particles --- */
+.particle {
+  position: absolute;
+  bottom: -20px;
+  width: 6px; height: 6px;
+  background: var(--brand-2);
+  border-radius: 50%;
+  opacity: 0.7;
+  animation: floatParticle 12s linear infinite;
+}
+@keyframes floatParticle {
+  from { transform: translateY(0) translateX(0); opacity: 0.3; }
+  50% { opacity: 1; }
+  to { transform: translateY(-120vh) translateX(40px); opacity: 0; }
+}
+
+/* --- XP Progress Bar --- */
+footer::after {
+  content: "";
+  display: block;
+  height: 4px;
+  width: 100%;
+  margin-top: 20px;
+  background: linear-gradient(90deg, var(--brand), var(--brand-2), var(--brand));
+  background-size: 300% 100%;
+  animation: xpBar 8s linear infinite;
+  border-radius: 2px;
+}
+@keyframes xpBar {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* --- Scroll Reveal Smoother --- */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px) scale(0.95);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+  </style>
+</head>
+<body class="dark-theme"> <!-- Default theme class applied here -->
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <span class="dot"></span>
+       <a href="#home"><span>Editkaro<span style="color:var(--brand)">.in</span></span></a>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href="#portfolio">Portfolio</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact" class="cta">Contact</a></li>
+        </ul>
+      </nav>
+      <div class="theme-switcher-wrap">
+        <select id="theme-switcher" onchange="setTheme(this.value)">
+            <option value="dark-theme">Dark Theme</option>
+            <option value="cool-gradient-theme">Cool Gradient</option>
+            <option value="warm-gradient-theme">Warm Gradient</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <main id="home" class="container">
+    <!-- Hero -->
+    <section class="hero scroll-reveal">
+      <div>
+        <h1>We Edit. You Shine.<br/>Shorts, Ads, Gaming & more.</h1>
+        <p>Social-first video editing studio powering growth for creators, brands & startups. Crisp cuts, story-first pacing, scroll-stopping thumbnails, and grade that pops.</p>
+        <div class="badges">
+          <span class="badge">48hr Turnarounds</span>
+          <span class="badge">Platform‑native Styles</span>
+          <span class="badge">Color Grade & Sound Design</span>
+          <span class="badge">Motion Graphics</span>
+        </div>
+        <a href="#portfolio" class="cta">Explore Work ↓</a>
+      </div>
+      <div class="hero-card floaty">
+        <video class="hero-video" autoplay muted loop playsinline poster="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1600&auto=format&fit=crop">
+          <source src="https://cdn.coverr.co/videos/coverr-editing-on-the-go-0846/1080p.mp4" type="video/mp4" />
+        </video>
+      </div>
+    </section>
+
+    <!-- Portfolio Controls -->
+    <section id="portfolio" class="scroll-reveal">
+      <h2 class="section-title">Portfolio</h2>
+      <p class="section-sub">Browse by category or search. Click any tile to watch.</p>
+      <div class="controls">
+        <div class="search" role="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 21L16.65 16.65M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input id="search" type="search" placeholder="Search clips… (e.g. 'football', 'ad', 'anime')" />
+        </div>
+        <div class="filters" aria-label="Category filters">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="short">Short‑form</button>
+          <button class="filter-btn" data-filter="long">Long‑form</button>
+          <button class="filter-btn" data-filter="gaming">Gaming</button>
+          <button class="filter-btn" data-filter="football">Football</button>
+          <button class="filter-btn" data-filter="ecom">eCommerce Ads</button>
+          <button class="filter-btn" data-filter="docu">Documentary</button>
+          <button class="filter-btn" data-filter="grade">Color Grading</button>
+          <button class="filter-btn" data-filter="anime">Anime</button>
+          <button class="filter-btn" data-filter="ads">Ads</button>
+        </div>
+      </div>
+
+      <!-- Grid Gallery -->
+      <div id="grid" class="grid" aria-live="polite">
+        <!-- Template for cards (duplicate and change data-category, data-title, data-tags) -->
+        
+        <!-- Short-form examples -->
+        <article class="card scroll-reveal" data-category="short" data-title="Fashion Reel — Snappy Cuts" data-tags="short,reel,instagram,viral">
+          <div class="thumb-wrap">
+            <img class="thumb" alt="Fashion short form reel" src="toa-heftiba-FmrNRLJZu9s-unsplash.jpg" />
+            <span class="chip">Short‑form</span>
+            <div class="overlay"><button class="play" data-video="https://cdn.coverr.co/videos/coverr-stylish-woman-walking-2855/1080p.mp4">▶ Watch</button></div>
+          </div>
+          <div class="meta">
+            <div>
+              <div class="title">Fashion Reel — Snappy Cuts</div>
+              <div class="desc">Fast transitions, beat‑synced text & looks.</div>
+            </div>
+          </div>
+        </article>
+
+        <article class="card scroll-reveal" data-category="short" data-title="Cafe B‑roll — Cinematic" data-tags="short,broll,coffee,aesthetic">
+          <div class="thumb-wrap">
+            <img class="thumb" alt="Cafe broll" src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1600&auto=format&fit=crop" />
+            <span class="chip">Short‑form</span>
+            <div class="overlay"><button class="play" data-video="https://cdn.coverr.co/videos/coverr-coffee-preparation-5985/1080p.mp4">▶ Watch</button></div>
+          </div>
+          <div class="meta">
+            <div>
+              <div class="title">Cafe B‑roll — Cinematic</div>
+              <div class="desc">Speed‑ramping, light leaks, subtle grain.</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Long-form -->
+        <article class="card scroll-reveal" data-category="long" data-title="Podcast Edit — Clean Multicam" data-tags="long,podcast,yt,interview">
+          <div class="thumb-wrap">
+            <img class="thumb" alt="Podcast studio" src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=1600&auto=format&fit=crop" />
+            <span class="chip">Long‑form</span>
+            <div class="overlay"><button class="play" data-video="https://cdn.coverr.co/videos/coverr-two-podcasters-in-studio-2899/1080p.mp4">▶ Watch</button></div>
+          </div>
+          <div class="meta">
+            <div>
+              <div class="title">Podcast Edit — Clean Multicam</div>
+              <div class="desc">Hard cuts, room tone, loudness normalized.</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Gaming -->
+        <article class="card scroll-reveal" data-category="gaming" data-title="FPS Montage — Hype Sync" data-tags="gaming,montage,fps,valorant">
+          <div class="thumb-wrap">
+            <img class="thumb" alt="Gaming setup" src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1600&auto=format&fit=crop" />
+            <span class="chip">Gaming</span>
+            <div class="overlay"><button class="play" data-video="https://cdn.coverr.co/videos/coverr-gamer-playing-a-shooter-game-8477/1080p.mp4">▶ Watch</button></div>
+          </div>
+          <div class="meta">
+            <div>
+              <div class="title">FPS Montage — Hype Sync</div>
+              <div class="desc">Kill‑feed highlights, speed ramps, motion blur.</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Football -->
+        <article class="card scroll-reveal" data-category="football" data-title="Football Edits — Matchday Hype" data-tags="football,sports,highlights,hype">
+          <div class="thumb-wrap">
+            <img class="thumb" alt="Football stadium" src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1600&auto=format&fit=crop" />
+            <span class="chip">Football</span>
+            <div class="overlay"><button class="play" data-video="https://cdn.coverr.co/videos/coverr-soccer-field-4495/1080p.mp4">▶ Watch</button></div>
+          </div>
+          <div class="meta">
+            <div>
+              <div class="title">Football Edit — Matchday Hype</div>
+              <div class="desc">Punchy hits, crowd SFX, kinetic type.</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- eCommerce Ads -->
+        <article class="card scroll-reveal" data-category="ecom" data-title="D2C Skincare — UGC Ad" data-tags="ecommerce,ad,ugc,skincare">
+          <div class="thumb-wrap">
+            <img class="thumb" alt="Skincare product" src="https://images.unsplash.com/photo-1600267185393-e158a98703de?q=80&w=1600&auto=format&fit=crop" />
+            <span class="chip">eCommerce Ad</span>
+            <div class="overlay"><button class="play" data-video="https://cdn.coverr.co/videos/coverr-skin-care-products-0246/1080p.mp4">▶ Watch</button></div>
+          </div>
+          <div class="meta">
+            <div>
+              <div class="title">D2C Skincare — UGC Ad</div>
+              <div class="desc">Hook‑build‑CTA structure, captions, emojis.</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Documentary -->
+        <article class="card scroll-reveal" data-category="docu" data-title="Mini‑Doc — Founder Story" data-tags="documentary,story,founder,cinema">
+          <div class="thumb-wrap">
+            <img class="thumb" alt="Interview" src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=1600&auto=format&fit=crop" />
+            <span class="chip">Documentary</span>
+            <div class="overlay"><button class="play" data-video="https://cdn.coverr.co/videos/coverr-man-in-interview-2280/1080p.mp4">▶ Watch</button></div>
+          </div>
+          <div class="meta">
+            <div>
+              <div class="title">Mini‑Doc — Founder Story</div>
+              <div class="desc">A‑roll/B‑roll, J/L cuts, tasteful music bed.</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Color Grading -->
+        <article class="card scroll-reveal" data-category="grade" data-title="Before/After — Teal & Orange" data-tags="color,grading,teal,orange">
+          <div class="thumb-wrap">
+            <img class="thumb" alt="Color grading" src="https://images.unsplash.com/photo-1518779578993-ec3579fee39f?q=80&w=1600&auto=format&fit=crop" />
+            <span class="chip">Color Grading</span>
+            <div class="overlay"><button class="play" data-video="https://cdn.coverr.co/videos/coverr-color-grading-on-a-laptop-5125/1080p.mp4">▶ Watch</button></div>
+          </div>
+          <div class="meta">
+            <div>
+              <div class="title">Before/After — Teal & Orange</div>
+              <div class="desc">Contrast curves, skin‑tone isolations, film LUTs.</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Anime -->
+        <article class="card scroll-reveal" data-category="anime" data-title="AMV — Beat Synced" data-tags="anime,amv,edit,sync">
+          <div class="thumb-wrap">
+            <img class="thumb" alt="Anime edit" src="dex-ezekiel-IxDPZ-AHfoI-unsplash.jpg" />
+            <span class="chip">Anime</span>
+            <div class="overlay"><button class="play" data-video="https://cdn.coverr.co/videos/coverr-anime-city-lights-7771/1080p.mp4">▶ Watch</button></div>
+          </div>
+          <div class="meta">
+            <div>
+              <div class="title">AMV — Beat Synced</div>
+              <div class="desc">Rotobrush, motion blur, directional wipes.</div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Ads / Promos -->
+        <article class="card scroll-reveal" data-category="ads" data-title="App Promo — Motion GFX" data-tags="ads,promo,app,mograph">
+          <div class="thumb-wrap">
+            <img class="thumb" alt="App promo" src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1600&auto=format&fit=crop" />
+            <span class="chip">Ad</span>
+            <div class="overlay"><button class="play" data-video="https://cdn.coverr.co/videos/coverr-using-a-mobile-app-7313/1080p.mp4">▶ Watch</button></div>
+          </div>
+          <div class="meta">
+            <div>
+              <div class="title">App Promo — Motion GFX</div>
+              <div class="desc">Kinetic typography, screen comps, logo sting.</div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="scroll-reveal">
+      <h2 class="section-title">About Editkaro.in</h2>
+      <p class="section-sub">We’re a social‑first video editing partner for creators, e‑commerce brands and startups. From short, punchy hooks to long‑form storytelling—we cut, grade and package content that performs.</p>
+      <div class="grid">
+        <div class="card" style="grid-column:span 6; padding:18px">
+          <h3 style="margin:0 0 8px">Why choose us?</h3>
+          <ul style="margin:0; padding-left:18px; line-height:1.9; color:var(--muted)">
+            <li>Platform‑native edits for Reels, Shorts, TikTok & YouTube</li>
+            <li>Sound design, captions, motion graphics & color grade included</li>
+            <li>Fast turnarounds with feedback cycles built‑in</li>
+            <li>Flexible monthly packs and on‑demand projects</li>
+          </ul>
+        </div>
+        <div class="card" style="grid-column:span 6; padding:18px">
+          <h3 style="margin:0 0 8px">Stats</h3>
+          <div style="display:flex; gap:16px; flex-wrap:wrap">
+            <div class="pill">500+ videos delivered</div>
+            <div class="pill">50+ brands & creators</div>
+            <div class="pill">Avg. 32% watch‑through uplift</div>
+            <div class="pill">Global clients</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="scroll-reveal">
+      <h2 class="section-title">Let’s Work Together</h2>
+      <p class="section-sub">Tell us about your next campaign or channel. We’ll reply within 24–48 hours.</p>
+      <div class="grid">
+        <form class="card" style="grid-column:span 7; padding:18px" onsubmit="event.preventDefault(); alert('Thanks! This is a front‑end demo. Hook this form to your backend or use Formspree.');">
+          <div style="display:grid; gap:10px">
+            <input required placeholder="Your name" style="padding:12px 14px; border-radius:10px; border:1px solid var(--ring); background:var(--bg); color:var(--text)" />
+            <input type="email" required placeholder="Email" style="padding:12px 14px; border-radius:10px; border:1px solid var(--ring); background:var(--bg); color:var(--text)" />
+            <input placeholder="Brand / Channel" style="padding:12px 14px; border-radius:10px; border:1px solid var(--ring); background:var(--bg); color:var(--text)" />
+            <select style="padding:12px 14px; border-radius:10px; border:1px solid var(--ring); background:var(--bg); color:var(--text)">
+              <option>Service of interest</option>
+              <option>Short‑form package</option>
+              <option>Long‑form editing</option>
+              <option>Gaming Montage</option>
+              <option>Football Highlights</option>
+              <option>Color Grading</option>
+              <option>eCommerce Ads / UGC</option>
+            </select>
+            <textarea rows="4" placeholder="Project details / links" style="padding:12px 14px; border-radius:10px; border:1px solid var(--ring); background:var(--bg); color:var(--text)"></textarea>
+            <button class="cta" style="cursor:pointer">Send</button>
+          </div>
+        </form>
+        <div class="card" style="grid-column:span 5; padding:18px; display:flex; flex-direction:column; gap:10px">
+          <div class="pill">✉ hello@editkaro.in</div>
+          <div class="pill">📸 Instagram: @editkaro.in</div>
+          <div class="pill">🕑 Mon–Sat: 10am–7pm IST</div>
+          <div class="pill">📍 Remote, India</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container" style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap">
+      <div>© <span id="year"></span> Editkaro.in — Crafted with ❤</div>
+      <div class="socials">
+        <a class="pill" href="#">Instagram</a>
+        <a class="pill" href="#">YouTube</a>
+        <a class="pill" href="#">LinkedIn</a>
+        <a class="pill" href="#">X (Twitter)</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox Modal -->
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Video preview">
+    <div class="lightbox-content">
+      <div class="lightbox-top">
+        <div style="font-weight:700">Preview</div>
+        <button class="close" id="closeLightbox">Close ✕</button>
+      </div>
+      <video id="lightboxVideo" controls playsinline></video>
+    </div>
+  </div>
+
+  <div class="particles">
+  <div class="particle" style="left:10%; animation-duration:14s;"></div>
+  <div class="particle" style="left:40%; animation-duration:18s;"></div>
+  <div class="particle" style="left:70%; animation-duration:12s;"></div>
+  <div class="particle" style="left:85%; animation-duration:16s;"></div>
+</div>
+
+
+  <script>
+    // Current year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Filtering logic
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const cards = [...document.querySelectorAll('.card[data-category]')];
+    const searchInput = document.getElementById('search');
+
+    function applyFilters(){
+      const active = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+      const q = (searchInput.value || '').toLowerCase().trim();
+      cards.forEach(card=>{
+        const matchCategory = active === 'all' || card.dataset.category === active;
+        const hay = (card.dataset.title + ' ' + card.dataset.tags).toLowerCase();
+        const matchQuery = !q || hay.includes(q);
+        card.style.display = (matchCategory && matchQuery) ? '' : 'none';
+      });
+    }
+
+    filterButtons.forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        filterButtons.forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        applyFilters();
+      })
+    })
+
+    searchInput.addEventListener('input', applyFilters);
+
+    // Lightbox logic
+    const lightbox = document.getElementById('lightbox');
+    const lightboxVideo = document.getElementById('lightboxVideo');
+
+    document.getElementById('closeLightbox').addEventListener('click', ()=>{
+      lightboxVideo.pause();
+      lightbox.classList.remove('open');
+      lightboxVideo.src = '';
+    });
+
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape' && lightbox.classList.contains('open')){
+        lightboxVideo.pause();
+        lightbox.classList.remove('open');
+        lightboxVideo.src = '';
+      }
+    });
+
+    document.getElementById('grid').addEventListener('click', (e)=>{
+      const btn = e.target.closest('.play');
+      if(!btn) return;
+      const src = btn.getAttribute('data-video');
+      console.log("Attempting to play video from:", src); // Debugging line
+      if(!src) {
+        console.error("No video source found for this card.");
+        return;
+      }
+      lightboxVideo.src = src;
+      lightbox.classList.add('open');
+      
+      // Explicitly mute before attempting to play
+      lightboxVideo.muted = true; 
+
+      // Attempt to play and catch potential autoplay errors
+      lightboxVideo.play().then(() => {
+        console.log("Video autoplay started successfully.");
+      }).catch(error => {
+        console.error("Video autoplay blocked:", error);
+        // No alert, just let the user use the controls
+      });
+    });
+
+    // Accessibility: close when clicking outside the content
+    lightbox.addEventListener('click', (e)=>{
+      const content = e.target.closest('.lightbox-content');
+      if(!content){
+        lightboxVideo.pause();
+        lightbox.classList.remove('open');
+        lightboxVideo.src = '';
+      }
+    });
+
+    // --- Scroll Reveal Animation Logic ---
+    const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            } else {
+                // Optional: remove 'visible' class if you want elements to re-animate on scroll back up
+                // entry.target.classList.remove('visible');
+            }
+        });
+    }, {
+        threshold: 0.15 // Trigger when 15% of the element is visible
+    });
+
+    scrollRevealElements.forEach(el => {
+        observer.observe(el);
+    });
+
+    // Initial filter
+    applyFilters();
+
+    // Theme switching logic
+    function setTheme(themeName) {
+        document.body.className = themeName; // Apply the theme class
+        localStorage.setItem('theme', themeName); // Save preference
+        console.log("Theme set to:", themeName); // Debugging line
+    }
+
+    // Load theme preference on startup
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedTheme = localStorage.getItem('theme') || 'dark-theme'; // Default to dark
+        document.body.className = savedTheme;
+        document.getElementById('theme-switcher').value = savedTheme;
+        console.log("Initial theme loaded:", savedTheme); // Debugging line
+    });
+
+    
+  </script>
+</body>
+</html>
